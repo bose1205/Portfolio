@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function MotionsPage() {
   return (
-    <main className="mx-auto w-full max-w-[1400px] px-4 pt-32 pb-24 sm:px-8">
-      <h1 className="mb-14 text-center text-4xl font-medium tracking-tight">Experiments</h1>
+    <main className="mx-auto w-full max-w-[1512px] px-10 pt-20 pb-24">
+      <h1 className="mb-10 text-center text-[28px] leading-[34px] font-medium text-foreground">Experiments</h1>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {experiments.map((e) => (
           <ExperimentCard key={e.id} {...e} />

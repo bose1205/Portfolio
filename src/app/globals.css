@@ -2,12 +2,12 @@
 
 :root {
   --background: #fdfdfb;
-  --foreground: #111111;
-  --card: #ffffff;
-  --card-border: #eeeeea;
-  --stage: #f9f9f7;
-  --stage-border: #efefeb;
-  --muted: #8a8a85;
+  --foreground: #2f2f2c;
+  --card: #fdfdfb;
+  --card-border: #ebebeb;
+  --stage: #f9f9f5;
+  --stage-border: #ebebeb;
+  --muted: #8b8b84;
 }
 
 @theme inline {
@@ -18,12 +18,12 @@
   --color-stage: var(--stage);
   --color-stage-border: var(--stage-border);
   --color-muted: var(--muted);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
