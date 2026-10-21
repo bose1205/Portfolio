@@ -10,8 +10,9 @@ const SHAPE = {
   rect: { track: "h-[14px] rounded-[4px]", thumb: "h-2.5 w-3 rounded-[2px]", travel: 16, offsetY: -1 },
 } as const;
 
-const DURATION = 300;
-const EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
+// Only transform + opacity are animated so everything stays on the compositor.
+const DURATION = 250;
+const EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
 
 function ToggleSwitch({
   variant,
@@ -44,18 +45,32 @@ function ToggleSwitch({
         }}
       >
         <span
-          className={s.thumb}
+          className={`relative ${s.thumb}`}
           style={{
             backgroundColor: disabled ? "#cacaca" : "#ffffff",
             transform: `translateX(${on ? s.travel : 0}px)`,
-            boxShadow: disabled
-              ? "0 0 2px rgba(0,0,0,0)"
-              : on
-                ? "-1px 0 2px rgba(0,0,0,0.08)"
-                : "1px 0 2px rgba(0,0,0,0.08)",
-            transition: `transform ${DURATION}ms ${EASE}, box-shadow ${DURATION}ms ${EASE}`,
+            transition: `transform ${DURATION}ms ${EASE}`,
+            willChange: "transform",
           }}
-        />
+        >
+          {/* Shadow flips side as the thumb crosses over; cross-faded with opacity instead of animating box-shadow. */}
+          <span
+            className="absolute inset-0 rounded-[inherit]"
+            style={{
+              boxShadow: "1px 0 2px rgba(0,0,0,0.08)",
+              opacity: disabled || on ? 0 : 1,
+              transition: `opacity ${DURATION}ms ${EASE}`,
+            }}
+          />
+          <span
+            className="absolute inset-0 rounded-[inherit]"
+            style={{
+              boxShadow: "-1px 0 2px rgba(0,0,0,0.08)",
+              opacity: !disabled && on ? 1 : 0,
+              transition: `opacity ${DURATION}ms ${EASE}`,
+            }}
+          />
+        </span>
       </span>
     </button>
   );
@@ -68,7 +83,7 @@ export function Toggle() {
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center gap-[23px]">
-      <div className="absolute top-[11px] flex gap-[18px] text-[13px] leading-[normal]">
+      <div className="absolute top-[11px] flex gap-[18px] text-xs leading-[normal]">
         {(["disabled", "enabled"] as const).map((m) => (
           <button
             key={m}
