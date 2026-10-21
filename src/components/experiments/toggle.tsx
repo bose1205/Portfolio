@@ -11,8 +11,9 @@ const SHAPE = {
 } as const;
 
 // Only transform + opacity are animated so everything stays on the compositor.
+// Ease-out (fast start, soft landing).
 const DURATION = 250;
-const EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
+const EASE = "cubic-bezier(0.33, 1, 0.68, 1)";
 
 function ToggleSwitch({
   variant,
@@ -48,7 +49,7 @@ function ToggleSwitch({
           className={`relative ${s.thumb}`}
           style={{
             backgroundColor: disabled ? "#cacaca" : "#ffffff",
-            transform: `translateX(${on ? s.travel : 0}px)`,
+            transform: `translate3d(${on ? s.travel : 0}px, 0, 0)`,
             transition: `transform ${DURATION}ms ${EASE}`,
             willChange: "transform",
           }}
