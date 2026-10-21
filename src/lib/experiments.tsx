@@ -1,0 +1,25 @@
+import type { ComponentType } from "react";
+import { Toggle } from "@/components/experiments/toggle";
+import { PressButton } from "@/components/experiments/press-button";
+import { SearchBox } from "@/components/experiments/search-box";
+
+export type Experiment = {
+  id: string;
+  title: string;
+  description: string;
+  // Omit `Demo` to render an empty stage (work in progress).
+  Demo?: ComponentType;
+};
+
+// Add a new experiment by creating a component in components/experiments
+// and appending an entry here.
+export const experiments: Experiment[] = [
+  { id: "toggle", title: "Toggle", description: "Smooth transition of toggle states", Demo: Toggle },
+  { id: "press-button", title: "Button animation", description: "Spring press with a loading state", Demo: PressButton },
+  { id: "search-box", title: "Search box", description: "Expands from an icon into an input", Demo: SearchBox },
+  { id: "button-4", title: "Button animation", description: "Smooth transition of states" },
+  { id: "button-5", title: "Button animation", description: "Smooth transition of states" },
+  { id: "button-6", title: "Button animation", description: "Smooth transition of states" },
+  { id: "button-7", title: "Button animation", description: "Smooth transition of states" },
+  { id: "button-8", title: "Button animation", description: "Smooth transition of states" },
+];
