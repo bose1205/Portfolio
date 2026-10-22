@@ -19,18 +19,20 @@ const label = {
   success: { icon: <Check size={16} strokeWidth={1.5} />, text: "Uploaded" },
 } as const;
 
-const SWIPE = 16;
-const hidden = (y: number) => ({ y, opacity: 0, filter: "blur(4px)" });
+const SWIPE = 12;
+const SWIPE_MS = 0.45;
+const SWIPE_EASE = [0.4, 0, 0.2, 1] as const;
+const hidden = (y: number) => ({ y, opacity: 0, filter: "blur(3px)" });
 const shown = { y: 0, opacity: 1, filter: "blur(0px)" };
 
 const content: Variants = {
   initial: (k: Kind) => (k === "up" ? hidden(SWIPE) : k === "down" ? hidden(-SWIPE) : shown),
-  animate: (k: Kind) => ({ ...shown, transition: { duration: k === "up" || k === "down" ? 0.2 : 0 } }),
+  animate: (k: Kind) => ({ ...shown, transition: k === "up" || k === "down" ? { duration: SWIPE_MS, ease: SWIPE_EASE } : { duration: 0 } }),
   exit: (k: Kind) =>
     k === "up"
-      ? { ...hidden(-SWIPE), transition: { duration: 0.2 } }
+      ? { ...hidden(-SWIPE), transition: { duration: SWIPE_MS, ease: SWIPE_EASE } }
       : k === "down"
-        ? { ...hidden(SWIPE), transition: { duration: 0.2 } }
+        ? { ...hidden(SWIPE), transition: { duration: SWIPE_MS, ease: SWIPE_EASE } }
         : { opacity: 0, transition: { duration: 0.1 } },
 };
 
