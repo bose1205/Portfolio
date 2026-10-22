@@ -8,6 +8,8 @@ const WORDS = ["cosmetics", "keychains", "monsters"];
 const CYCLE_MS = 3000;
 const SWAP_S = 0.2; // fade out, then fade in
 const EXPAND_S = 0.5;
+const CLEAR_S = 0.2;
+const CLEAR_SHIFT = 10;
 const EASE = [0.4, 0, 0.2, 1] as const;
 
 const PILL_W = 190;
@@ -55,6 +57,9 @@ function Placeholder() {
 export function SearchBox() {
   const [mode, setMode] = useState<Mode>("idle");
   const [value, setValue] = useState("");
+  // Clearing: the old text swipes down and out while the placeholder slides down into place.
+  const [ghost, setGhost] = useState<{ id: number; text: string } | null>(null);
+  const [clearCount, setClearCount] = useState(0);
   const [stageW, setStageW] = useState(0);
   const stage = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -115,7 +120,14 @@ export function SearchBox() {
           }}
           className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm leading-[normal] text-muted"
         >
-          <Placeholder />
+          <motion.div
+            key={clearCount}
+            initial={clearCount ? { y: -CLEAR_SHIFT, opacity: 0 } : false}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: CLEAR_S, ease: "easeOut" }}
+          >
+            <Placeholder />
+          </motion.div>
         </motion.div>
 
         {/* The real input. Invisible click target while collapsed. */}
@@ -149,6 +161,21 @@ export function SearchBox() {
           } ${expanded ? "" : "cursor-pointer"}`}
         />
 
+        {/* Text that was just cleared, swiping down and out */}
+        {ghost && (
+          <motion.span
+            key={ghost.id}
+            aria-hidden
+            initial={{ y: 0, opacity: 1 }}
+            animate={{ y: CLEAR_SHIFT, opacity: 0 }}
+            transition={{ duration: CLEAR_S, ease: "easeIn" }}
+            onAnimationComplete={() => setGhost(null)}
+            className="pointer-events-none absolute inset-y-0 right-[37px] left-3 flex items-center overflow-hidden text-sm leading-[normal] whitespace-nowrap text-foreground"
+          >
+            {ghost.text}
+          </motion.span>
+        )}
+
         {/* Clear button */}
         <motion.button
           type="button"
@@ -157,6 +184,8 @@ export function SearchBox() {
           onMouseDown={(e) => e.preventDefault()}
           onClick={(e) => {
             e.stopPropagation();
+            setGhost({ id: Date.now(), text: value });
+            setClearCount((c) => c + 1);
             setValue("");
             input.current?.focus();
           }}
