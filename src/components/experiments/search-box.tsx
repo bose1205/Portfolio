@@ -8,8 +8,11 @@ const WORDS = ["cosmetics", "keychains", "monsters"];
 const CYCLE_MS = 3000;
 const SWAP_S = 0.2; // fade out, then fade in
 const EXPAND_S = 0.5;
-const CLEAR_S = 0.2;
-const CLEAR_SHIFT = 10;
+// Same swipe as the upload button (loading -> success): 12px, 3px blur, 450ms, ease-in-out.
+const CLEAR_S = 0.45;
+const CLEAR_SHIFT = 12;
+const CLEAR_EASE = [0.4, 0, 0.2, 1] as const;
+const CLEAR_BLUR = "blur(3px)";
 const EASE = [0.4, 0, 0.2, 1] as const;
 
 const PILL_W = 190;
@@ -122,9 +125,9 @@ export function SearchBox() {
         >
           <motion.div
             key={clearCount}
-            initial={clearCount ? { y: -CLEAR_SHIFT, opacity: 0 } : false}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: CLEAR_S, ease: "easeOut" }}
+            initial={clearCount ? { y: -CLEAR_SHIFT, opacity: 0, filter: CLEAR_BLUR } : false}
+            animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: CLEAR_S, ease: CLEAR_EASE }}
           >
             <Placeholder />
           </motion.div>
@@ -166,9 +169,9 @@ export function SearchBox() {
           <motion.span
             key={ghost.id}
             aria-hidden
-            initial={{ y: 0, opacity: 1 }}
-            animate={{ y: CLEAR_SHIFT, opacity: 0 }}
-            transition={{ duration: CLEAR_S, ease: "easeIn" }}
+            initial={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+            animate={{ y: CLEAR_SHIFT, opacity: 0, filter: CLEAR_BLUR }}
+            transition={{ duration: CLEAR_S, ease: CLEAR_EASE }}
             onAnimationComplete={() => setGhost(null)}
             className="pointer-events-none absolute inset-y-0 right-[37px] left-3 flex items-center overflow-hidden text-sm leading-[normal] whitespace-nowrap text-foreground"
           >
