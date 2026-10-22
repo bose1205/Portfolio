@@ -27,3 +27,32 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
 }
+
+/* Soft left-to-right gradient sweep for the search placeholder.
+   --t is registered so it can be animated and shared by several text pieces,
+   keeping one continuous gradient across them (see search-box.tsx). */
+@property --t {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes sg-sweep {
+  to {
+    --t: 1;
+  }
+}
+
+.sg-sweep {
+  animation: sg-sweep 3s ease-in-out infinite alternate;
+}
+
+.sg-text {
+  background-image: linear-gradient(90deg, #8b8b84, #252523);
+  background-size: calc(var(--w) * 2px) 100%;
+  background-position: calc(var(--o) * -1px - var(--t) * var(--w) * 1px) 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

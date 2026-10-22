@@ -16,7 +16,7 @@ export type Experiment = {
 export const experiments: Experiment[] = [
   { id: "toggle", title: "Toggle", description: "Smooth transition of toggle states", Demo: Toggle },
   { id: "upload-button", title: "Button animation", description: "Smooth transition of states", Demo: UploadButton },
-  { id: "search-box", title: "Search box", description: "Expands from an icon into an input", Demo: SearchBox },
+  { id: "search-box", title: "Search box", description: "Interactions in a search box", Demo: SearchBox },
   { id: "button-4", title: "Button animation", description: "Smooth transition of states" },
   { id: "button-5", title: "Button animation", description: "Smooth transition of states" },
   { id: "button-6", title: "Button animation", description: "Smooth transition of states" },
