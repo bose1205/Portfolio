@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Search, X } from "lucide-react";
 
 const WORDS = ["cosmetics", "keychains", "monsters"];
 const CYCLE_MS = 3000;
-const SWAP_S = 0.15; // fade out + fade in = 300ms
+const SWAP_S = 0.2; // fade out, then fade in
 const EXPAND_S = 0.5;
 const EASE = [0.4, 0, 0.2, 1] as const;
 
@@ -15,14 +15,12 @@ const STAGE_PADDING = 16;
 
 type Mode = "idle" | "editing" | "searched";
 
-/** Placeholder text: "Search ‘word’" with a softly sweeping gradient on the quoted part. */
+/** Placeholder text: "Search ‘word’" with a gradient sweeping across the quoted part. */
 function Placeholder() {
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(true);
-  const [m, setM] = useState<{ q: number; words: number[] } | null>(null);
-  const measure = useRef<HTMLSpanElement>(null);
 
-  // Cycle: fade the word out, swap it while hidden, fade the new one in.
+  // Cycle: the whole ‘word’ (quotes included) fades out, is swapped while hidden, then fades in.
   useEffect(() => {
     let swap: ReturnType<typeof setTimeout>;
     const id = setInterval(() => {
@@ -38,49 +36,18 @@ function Placeholder() {
     };
   }, []);
 
-  // Measure glyph widths so the closing quote and the shared gradient line up.
-  useLayoutEffect(() => {
-    const read = () => {
-      const el = measure.current;
-      if (!el) return;
-      const [q, ...words] = Array.from(el.children).map((c) => (c as HTMLElement).getBoundingClientRect().width);
-      setM({ q, words });
-    };
-    read();
-    document.fonts?.ready.then(read);
-  }, []);
-
-  const wordW = m?.words[index];
-  const q = m?.q ?? 0;
-  const total = 2 * q + (wordW ?? 0);
-  const piece = (offset: number): CSSProperties => ({ "--w": total, "--o": offset }) as CSSProperties;
-
   return (
     <span className="flex items-center gap-1 whitespace-nowrap">
       <span>Search</span>
-      <span className="sg-sweep flex">
-        <span className="sg-text" style={piece(0)}>
-          ‘
-        </span>
-        <motion.span
-          className="sg-text"
-          style={piece(q)}
-          initial={false}
-          animate={{ opacity: visible ? 1 : 0, ...(wordW !== undefined && { width: wordW }) }}
-          transition={{ duration: SWAP_S, ease: "easeInOut" }}
-        >
-          {WORDS[index]}
-        </motion.span>
-        <span className="sg-text" style={piece(q + (wordW ?? 0))}>
-          ’
-        </span>
-      </span>
-      <span ref={measure} aria-hidden className="invisible absolute">
-        <span>‘</span>
-        {WORDS.map((w) => (
-          <span key={w}>{w}</span>
-        ))}
-      </span>
+      {/* opacity and the gradient clip live on the same element so the clip keeps working */}
+      <motion.span
+        className="sg-text"
+        initial={false}
+        animate={{ opacity: visible ? 1 : 0 }}
+        transition={{ duration: SWAP_S, ease: "easeInOut" }}
+      >
+        ‘{WORDS[index]}’
+      </motion.span>
     </span>
   );
 }
