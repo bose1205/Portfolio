@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import { Toggle } from "@/components/experiments/toggle";
-import { PressButton } from "@/components/experiments/press-button";
+import { UploadButton } from "@/components/experiments/upload-button";
 import { SearchBox } from "@/components/experiments/search-box";
 
 export type Experiment = {
@@ -15,7 +15,7 @@ export type Experiment = {
 // and appending an entry here.
 export const experiments: Experiment[] = [
   { id: "toggle", title: "Toggle", description: "Smooth transition of toggle states", Demo: Toggle },
-  { id: "press-button", title: "Button animation", description: "Spring press with a loading state", Demo: PressButton },
+  { id: "upload-button", title: "Button animation", description: "Smooth transition of states", Demo: UploadButton },
   { id: "search-box", title: "Search box", description: "Expands from an icon into an input", Demo: SearchBox },
   { id: "button-4", title: "Button animation", description: "Smooth transition of states" },
   { id: "button-5", title: "Button animation", description: "Smooth transition of states" },

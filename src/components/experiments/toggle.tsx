@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ModeTabs, type Mode } from "./mode-tabs";
 
 type Variant = "pill" | "rect";
 
@@ -78,23 +79,13 @@ function ToggleSwitch({
 }
 
 export function Toggle() {
-  const [mode, setMode] = useState<"disabled" | "enabled">("enabled");
+  const [mode, setMode] = useState<Mode>("enabled");
   const [checked, setChecked] = useState<Record<Variant, boolean>>({ pill: false, rect: false });
   const disabled = mode === "disabled";
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center gap-[23px]">
-      <div className="absolute top-[11px] flex gap-[18px] text-xs leading-[normal]">
-        {(["disabled", "enabled"] as const).map((m) => (
-          <button
-            key={m}
-            onClick={() => setMode(m)}
-            className={`cursor-pointer capitalize outline-none ${mode === m ? "text-foreground" : "text-[#a9a9a3]"}`}
-          >
-            {m}
-          </button>
-        ))}
-      </div>
+      <ModeTabs mode={mode} onChange={setMode} />
       {(["pill", "rect"] as const).map((v) => (
         <ToggleSwitch
           key={v}
