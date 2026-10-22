@@ -11,7 +11,7 @@ type Kind = "fade" | "instant" | "up" | "down";
 
 const PRESS_MS = 300;
 const LOADING_MS = 2500;
-const SUCCESS_MS = 1500;
+const SUCCESS_MS = 2500;
 
 const label = {
   idle: { icon: <Upload size={16} strokeWidth={1.5} />, text: "Upload" },
@@ -108,7 +108,7 @@ export function UploadButton() {
           onClick={click}
           onHoverStart={() => setHovered(true)}
           onHoverEnd={() => setHovered(false)}
-          animate={{ y: hovered && idle && !disabled ? -1 : 0 }}
+          animate={{ y: hovered && idle && !disabled ? -2 : 0 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
           className={`relative flex h-[49px] w-[154px] items-center justify-center overflow-hidden rounded-[35px] pr-7 pl-6 text-sm font-medium text-white outline-none focus-visible:ring-2 focus-visible:ring-black/30 ${
             disabled ? "cursor-default bg-[#bfbfbf]" : "cursor-pointer bg-[#1c1c1a]"
