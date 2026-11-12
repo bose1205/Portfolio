@@ -17,28 +17,25 @@ export function BillPrinter() {
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
-    let cancelled = false;
-    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    let timer: ReturnType<typeof setTimeout>;
+    let running: { stop: () => void }[] = [];
 
-    (async () => {
-      while (!cancelled) {
-        // Reset (also what makes the previous bill vanish instantly): bill back inside the machine.
-        await animate("[data-bill]", { y: -BILL_H, opacity: 1 }, { duration: 0 });
-        await animate("[data-shadow]", { opacity: 1 }, { duration: 0 });
-
-        // Print: the bill slides out; the slot shadow eases off as the bill clears the opening.
-        await Promise.all([
-          animate("[data-bill]", { y: 0 }, { duration: PRINT_S, ease: PRINT_EASE }),
-          animate("[data-shadow]", { opacity: [1, 1, 0] }, { duration: PRINT_S, times: [0, 0.6, 1], ease: "linear" }),
-        ]);
-        if (cancelled) return;
-        await sleep(HOLD_MS);
-        if (cancelled) return;
-      }
-    })();
+    // Timer-driven loop (not awaiting the animations) so a cycle always restarts on schedule.
+    // Every cycle starts from explicit keyframes (bill fully inside the machine -> out), so the
+    // previous bill vanishes instantly when the next one starts. The slot shadow eases off as
+    // the bill clears the opening.
+    const cycle = () => {
+      running = [
+        animate("[data-bill]", { y: [-BILL_H, 0] }, { duration: PRINT_S, ease: PRINT_EASE }),
+        animate("[data-shadow]", { opacity: [1, 1, 0] }, { duration: PRINT_S, times: [0, 0.6, 1], ease: "linear" }),
+      ];
+      timer = setTimeout(cycle, PRINT_S * 1000 + HOLD_MS);
+    };
+    cycle();
 
     return () => {
-      cancelled = true;
+      clearTimeout(timer);
+      running.forEach((a) => a.stop());
     };
   }, [animate]);
 
