@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import { Toggle } from "@/components/experiments/toggle";
 import { UploadButton } from "@/components/experiments/upload-button";
 import { AvatarGroup } from "@/components/experiments/avatar-group";
+import { BillPrinter } from "@/components/experiments/bill-printer";
 import { SearchBox } from "@/components/experiments/search-box";
 
 export type Experiment = {
@@ -19,7 +20,7 @@ export const experiments: Experiment[] = [
   { id: "upload-button", title: "Button animation", description: "Smooth transition of states", Demo: UploadButton },
   { id: "search-box", title: "Search box", description: "Interactions in a search box", Demo: SearchBox },
   { id: "avatar-group", title: "Avatar hover", description: "Lift, focus and tooltip on hover", Demo: AvatarGroup },
-  { id: "button-5", title: "Button animation", description: "Smooth transition of states" },
+  { id: "bill-printer", title: "Bill generation", description: "A receipt printing out of the machine", Demo: BillPrinter },
   { id: "button-6", title: "Button animation", description: "Smooth transition of states" },
   { id: "button-7", title: "Button animation", description: "Smooth transition of states" },
   { id: "button-8", title: "Button animation", description: "Smooth transition of states" },
