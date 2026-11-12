@@ -6,7 +6,7 @@ import { useAnimate } from "motion/react";
 const BILL_W = 227;
 const BILL_H = 276;
 const PRINT_S = 2.4;
-const HOLD_MS = 2600;
+const HOLD_MS = 1000;
 const PRINT_EASE = [0.37, 0, 0.2, 1] as const;
 
 // Full design is 263x296; scaled to sit inside the card stage.
@@ -22,7 +22,7 @@ export function BillPrinter() {
 
     (async () => {
       while (!cancelled) {
-        // Reset: bill fully inside the machine, behind the slot line.
+        // Reset (also what makes the previous bill vanish instantly): bill back inside the machine.
         await animate("[data-bill]", { y: -BILL_H, opacity: 1 }, { duration: 0 });
         await animate("[data-shadow]", { opacity: 1 }, { duration: 0 });
 
@@ -34,10 +34,6 @@ export function BillPrinter() {
         if (cancelled) return;
         await sleep(HOLD_MS);
         if (cancelled) return;
-
-        // Tear off: drop away and fade, then print the next one.
-        await animate("[data-bill]", { y: 24, opacity: 0 }, { duration: 0.5, ease: "easeIn" });
-        await sleep(500);
       }
     })();
 
@@ -121,8 +117,8 @@ export function BillPrinter() {
         {/* Shadow cast by the slot's lower lip onto the bill as it comes out */}
         <div
           data-shadow
-          className="pointer-events-none absolute inset-x-0 top-0 h-[22px]"
-          style={{ background: "linear-gradient(to bottom, rgba(20,20,18,0.3), rgba(20,20,18,0))" }}
+          className="pointer-events-none absolute inset-x-0 top-0 h-3"
+          style={{ background: "linear-gradient(to bottom, rgba(20,20,18,0.45), rgba(20,20,18,0))" }}
         />
       </div>
     </div>
